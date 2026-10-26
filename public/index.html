@@ -5,60 +5,68 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ريڤيو الشطرنج</title>
 <style>
-:root{--bg:#f2f0ec;--pn:#fff;--tx:#1d1d1b;--mu:#6d6a64;--ln:#dcd8d0;--ac:#2f5d50;--sl:#e9e5da;--sd:#6b8f7b}
-@media(prefers-color-scheme:dark){:root{--bg:#1b1c1b;--pn:#252726;--tx:#ebe9e4;--mu:#a29e95;--ln:#383b39;--ac:#6fb59f}}
+:root{--bg:#302e2b;--pn:#262522;--in:#1f1e1c;--tx:#f0efed;--mu:#a3a19d;--ln:#3d3a37;--gr:#81b64c;--gd:#5d8a35;--bt:#454340;--bs:#2d2b29}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.6 system-ui,"Segoe UI",Tahoma,sans-serif}
-main{max-width:1000px;margin:0 auto;padding:16px}
-h1{font-size:1.4rem;margin:.2em 0 .6em}
-section{background:var(--pn);border:1px solid var(--ln);border-radius:10px;padding:14px;margin-bottom:14px}
-textarea{width:100%;height:110px;border:1px solid var(--ln);border-radius:8px;padding:8px;background:var(--bg);color:var(--tx);font:13px monospace;direction:ltr;resize:vertical}
-.row{display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap}
-button,select{font:inherit;border:1px solid var(--ln);background:var(--pn);color:var(--tx);border-radius:8px;padding:6px 12px;cursor:pointer}
-button:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
-#go,#exb{background:var(--ac);color:#fff;border-color:var(--ac)}
-#st{color:var(--mu);margin:8px 0 0;min-height:1.6em}
+header{background:var(--in);border-bottom:1px solid var(--ln)}
+header div{max-width:1040px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
+header b{font-size:1.25rem;font-weight:800}
+header b span{color:var(--gr);margin-inline-end:6px}
+main{max-width:1040px;margin:0 auto;padding:16px}
+section{background:var(--pn);border-radius:10px;padding:14px;margin-bottom:14px}
+textarea{width:100%;height:110px;border:1px solid var(--ln);border-radius:8px;padding:10px;background:var(--in);color:var(--tx);font:13px monospace;direction:ltr;resize:vertical}
+.row{display:flex;gap:12px;align-items:center;margin-top:12px;flex-wrap:wrap}
+label{color:var(--mu)}
+select{font:inherit;background:var(--bt);color:var(--tx);border:0;border-radius:8px;padding:7px 10px}
+button{font:inherit;font-weight:700;border:0;border-radius:8px;padding:8px 14px;cursor:pointer;background:var(--bt);color:var(--tx);box-shadow:0 3px 0 var(--bs)}
+button:active{transform:translateY(2px);box-shadow:0 1px 0 var(--bs)}
+button:disabled{opacity:.6;cursor:wait}
+button:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--gr);outline-offset:2px}
+#go,#exb{background:var(--gr);color:#fff;box-shadow:0 4px 0 var(--gd)}
+#go{padding:10px 26px;font-size:1.05rem}
+#lg{padding:5px 12px;font-size:.9rem}
+#st{color:var(--mu);margin:10px 0 0;min-height:1.6em}
 .cols{display:grid;gap:16px}
-@media(min-width:820px){.cols{grid-template-columns:minmax(0,560px) 1fr}}
-.who{font-weight:600;padding:4px 2px;direction:ltr;text-align:left}
+@media(min-width:840px){.cols{grid-template-columns:minmax(0,580px) 1fr}}
+.who{font-weight:700;padding:5px 2px;direction:ltr;text-align:left}
 .bx{display:flex;gap:8px;direction:ltr}
-#ev{width:18px;background:#2b2b2b;border-radius:4px;display:flex;overflow:hidden}
-#evw{background:#f4f4f4;width:100%;transition:height .25s}
-#bd{position:relative;flex:1;aspect-ratio:1;border-radius:6px;overflow:hidden}
+#ev{width:20px;background:#403d39;border-radius:4px;display:flex;overflow:hidden}
+#evw{background:#f4f4f2;width:100%;transition:height .25s}
+#bd{position:relative;flex:1;aspect-ratio:1;border-radius:4px;overflow:hidden}
 #cells{display:grid;grid-template-columns:repeat(8,1fr);width:100%;height:100%}
-.sq{position:relative;display:flex;align-items:center;justify-content:center;font-size:min(9vw,52px);line-height:1}
-.sq.l{background:var(--sl)}.sq.d{background:var(--sd)}
-.sq.hl::after{content:"";position:absolute;inset:0;background:rgba(255,214,0,.38)}
+.sq{position:relative;display:flex;align-items:center;justify-content:center;font-size:min(9vw,54px);line-height:1}
+.sq.l{background:#eeeed2}.sq.d{background:#769656}
+.sq.hl::after{content:"";position:absolute;inset:0;background:rgba(255,255,51,.5)}
 .sq i{font-style:normal;position:relative;z-index:1}
 .sq i.w{color:#fff;text-shadow:0 0 2px #000,0 0 1px #000,0 0 1px #000}
 .sq i.b{color:#161616}
-.bdg{position:absolute;z-index:2;top:1px;right:1px;min-width:18px;height:18px;border-radius:9px;color:#fff;font:700 11px/18px system-ui;text-align:center;padding:0 3px}
+.bdg{position:absolute;z-index:2;top:1px;right:1px;min-width:19px;height:19px;border-radius:10px;color:#fff;font:800 11px/19px system-ui;text-align:center;padding:0 3px;box-shadow:0 1px 2px rgba(0,0,0,.4)}
 #ar{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3}
-.nav{display:flex;gap:8px;justify-content:center;margin-top:10px;direction:ltr}
-.nav button{min-width:48px}
-#info{min-height:3.2em;font-weight:600}
-#info small{display:block;color:var(--mu);font-weight:400}
-#ex{margin:10px 0;min-height:1.6em;white-space:pre-wrap}
-#gr{width:100%;height:80px;border:1px solid var(--ln);border-radius:8px;background:var(--bg);cursor:pointer;margin-top:8px}
-table{border-collapse:collapse;width:100%;margin:10px 0;font-size:.92rem}
-td,th{padding:3px 6px;text-align:center;border-bottom:1px solid var(--ln)}
-td:first-child,th:first-child{text-align:right}
-.dot{display:inline-block;width:10px;height:10px;border-radius:5px;margin-left:6px}
-#ml{display:flex;flex-wrap:wrap;gap:4px;direction:ltr;max-height:200px;overflow:auto}
+.nav{display:flex;gap:8px;justify-content:center;margin-top:12px;direction:ltr}
+.nav button{min-width:52px}
+#info{min-height:3.4em;font-size:1.1rem;font-weight:700;background:var(--in);border-radius:8px;padding:10px 12px}
+#info small{display:block;color:var(--mu);font-size:.9rem;font-weight:400}
+#ex{margin:12px 0;min-height:1.6em;white-space:pre-wrap;color:var(--tx)}
+#gr{width:100%;height:80px;border-radius:8px;background:var(--in);cursor:pointer;margin-top:6px;display:block}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:.93rem}
+td,th{padding:4px 6px;text-align:center;border-bottom:1px solid var(--ln)}
+td:first-child,th:first-child{text-align:start}
+.dot{display:inline-block;width:10px;height:10px;border-radius:5px;margin-inline-end:7px}
+#ml{display:flex;flex-wrap:wrap;gap:3px;direction:ltr;max-height:210px;overflow:auto;background:var(--in);border-radius:8px;padding:8px}
 #ml .n{color:var(--mu);padding:6px 2px}
-#ml button{padding:3px 8px;border-color:transparent;background:transparent}
+#ml button{padding:3px 8px;background:transparent;box-shadow:none;font-weight:600}
 #ml button::before{content:"";display:inline-block;width:7px;height:7px;border-radius:4px;background:var(--c);margin-right:5px}
-#ml button.on{background:var(--ac);color:#fff}
+#ml button.on{background:var(--gr);color:#fff}
 </style>
 </head>
 <body>
+<header><div><b><span>♞</span><i data-i="title" style="font-style:normal"></i></b><button id="lg"></button></div></header>
 <main>
-<h1>ريڤيو الشطرنج</h1>
 <section>
-  <textarea id="pgn" placeholder="الصق الـPGN هنا" aria-label="PGN"></textarea>
+  <textarea id="pgn" aria-label="PGN"></textarea>
   <div class="row">
-    <label>العمق <select id="depth"><option>10</option><option selected>12</option><option>14</option><option>18</option></select></label>
-    <button id="go">حلّل</button>
+    <label><span data-i="depth"></span> <select id="depth"><option>10</option><option selected>12</option><option>14</option><option>18</option></select></label>
+    <button id="go" data-i="go"></button>
   </div>
   <p id="st"></p>
 </section>
@@ -72,14 +80,12 @@ td:first-child,th:first-child{text-align:right}
       </div>
       <div class="who" id="bot"></div>
       <div class="nav">
-        <button id="b0" aria-label="البداية">⏮</button><button id="b1" aria-label="السابق">◀</button>
-        <button id="b2" aria-label="التالي">▶</button><button id="b3" aria-label="النهاية">⏭</button>
-        <button id="fl" aria-label="قلب الرقعة">⇅</button>
+        <button id="b0">⏮</button><button id="b1">◀</button><button id="b2">▶</button><button id="b3">⏭</button><button id="fl">⇅</button>
       </div>
     </div>
     <div>
       <div id="info"></div>
-      <button id="exb">اشرح هذه النقلة</button>
+      <div class="row"><button id="exb" data-i="explain"></button></div>
       <div id="ex"></div>
       <svg id="gr" viewBox="0 0 600 80" preserveAspectRatio="none"></svg>
       <div id="sum"></div>
@@ -91,9 +97,20 @@ td:first-child,th:first-child{text-align:right}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
 <script>
 const $=s=>document.querySelector(s);
+const T={
+ar:{title:'ريڤيو الشطرنج',ph:'الصق الـPGN هنا',depth:'العمق',go:'حلّل',explain:'اشرح هذه النقلة',explaining:'جارٍ الشرح…',explainFail:'تعذّر الشرح',
+ loadEng:'جارٍ تحميل المحرك…',analyzing:'جارٍ التحليل',invalid:'الـPGN غير صالح.',nomoves:'ما في نقلات في هذا الـPGN.',done:'اكتمل التحليل.',err:'حدث خطأ أثناء التحليل. جرّب مرة ثانية.',
+ start:'البداية',eval:'التقييم',bestIs:'الأفضل',acc:'الدقة',white:'أبيض',black:'أسود',whiteC:'الأبيض',blackC:'الأسود',
+ c_brilliant:'رائعة',c_great:'قوية',c_best:'الأفضل',c_excellent:'ممتازة',c_good:'جيدة',c_inacc:'دقة ضعيفة',c_mistake:'خطأ',c_blunder:'خطأ فادح'},
+en:{title:'Chess Review',ph:'Paste PGN here',depth:'Depth',go:'Analyze',explain:'Explain this move',explaining:'Explaining…',explainFail:'Could not explain',
+ loadEng:'Loading engine…',analyzing:'Analyzing',invalid:'Invalid PGN.',nomoves:'No moves found in this PGN.',done:'Analysis complete.',err:'Something went wrong during analysis. Try again.',
+ start:'Start',eval:'Eval',bestIs:'Best',acc:'Accuracy',white:'White',black:'Black',whiteC:'White',blackC:'Black',
+ c_brilliant:'Brilliant',c_great:'Great',c_best:'Best',c_excellent:'Excellent',c_good:'Good',c_inacc:'Inaccuracy',c_mistake:'Mistake',c_blunder:'Blunder'}};
+let L='ar';try{L=localStorage.getItem('lang')||((navigator.language||'').startsWith('ar')?'ar':'en')}catch(e){}
+const t=k=>T[L][k];
 const GL={k:'♚',q:'♛',r:'♜',b:'♝',n:'♞',p:'♟'};
 const VAL={p:1,n:3,b:3,r:5,q:9,k:99};
-const CL={brilliant:['!!','#1baca6','رائعة'],great:['!','#5b8bb2','قوية'],best:['★','#7aa33a','الأفضل'],excellent:['✓','#7aa33a','ممتازة'],good:['•','#8f8f8f','جيدة'],inacc:['?!','#d9a400','دقة ضعيفة'],mistake:['?','#e0801f','خطأ'],blunder:['??','#c83431','خطأ فادح']};
+const CL={brilliant:['!!','#1baca6'],great:['!','#5b8bb2'],best:['★','#81b64c'],excellent:['✓','#81b64c'],good:['•','#8f8f8f'],inacc:['?!','#f7c631'],mistake:['?','#e58f2a'],blunder:['??','#ca3431']};
 const win=cp=>50+50*(2/(1+Math.exp(-0.00368208*cp))-1);
 const uci=m=>m.from+m.to+(m.promotion||'');
 const fmt=cp=>Math.abs(cp)>=9000?(cp>0?'+':'-')+'M'+(10000-Math.abs(cp)):(cp>0?'+':'')+(cp/100).toFixed(1);
@@ -101,18 +118,18 @@ let S=null,sf=null;
 
 async function engine(){
   if(sf)return;
-  const t=await(await fetch('https://cdnjs.cloudflare.com/ajax/libs/stockfish.js/10.0.2/stockfish.js')).text();
-  sf=new Worker(URL.createObjectURL(new Blob([t],{type:'text/javascript'})));
+  const x=await(await fetch('https://cdnjs.cloudflare.com/ajax/libs/stockfish.js/10.0.2/stockfish.js')).text();
+  sf=new Worker(URL.createObjectURL(new Blob([x],{type:'text/javascript'})));
   sf.postMessage('uci');sf.postMessage('setoption name MultiPV value 2');
 }
 const sc=m=>m[1]==='mate'?(+m[2]>0?10000-+m[2]:-10000-+m[2]):+m[2];
 function look(fen,d){return new Promise(res=>{
-  const L={};
+  const Ls={};
   sf.onmessage=e=>{const l=String(e.data);
     if(l.startsWith('info')&&l.includes(' pv ')&&!/bound/.test(l)){
       const m=l.match(/score (cp|mate) (-?\d+)/),k=l.match(/multipv (\d+)/);
-      if(m)L[k?+k[1]:1]=sc(m);
-    }else if(l.startsWith('bestmove'))res({cp:L[1]??0,cp2:L[2],best:l.split(' ')[1]});
+      if(m)Ls[k?+k[1]:1]=sc(m);
+    }else if(l.startsWith('bestmove'))res({cp:Ls[1]??0,cp2:Ls[2],best:l.split(' ')[1]});
   };
   sf.postMessage('position fen '+fen);sf.postMessage('go depth '+d);
 });}
@@ -134,45 +151,46 @@ function classify(mv,fens,pos){
 
 $('#go').onclick=async()=>{
   const st=$('#st'),g=new Chess();
-  if(!g.load_pgn($('#pgn').value.trim(),{sloppy:true})){st.textContent='الـPGN غير صالح.';return}
+  if(!g.load_pgn($('#pgn').value.trim(),{sloppy:true})){st.textContent=t('invalid');return}
   const mv=g.history({verbose:true});
-  if(!mv.length){st.textContent='ما في نقلات في هذا الـPGN.';return}
+  if(!mv.length){st.textContent=t('nomoves');return}
   $('#go').disabled=true;
   try{
-    st.textContent='جارٍ تحميل المحرك…';await engine();
+    st.textContent=t('loadEng');await engine();
     const h=g.header(),r=new Chess(),fens=[r.fen()];
     for(const m of mv){r.move({from:m.from,to:m.to,promotion:m.promotion});fens.push(r.fen());}
     const d=+$('#depth').value,pos=[];
     for(let i=0;i<=mv.length;i++){
-      st.textContent=`جارٍ التحليل ${i+1}/${mv.length+1}`;
+      st.textContent=`${t('analyzing')} ${i+1}/${mv.length+1}`;
       pos.push(i===mv.length&&r.game_over()?{cp:r.in_checkmate()?-10000:0,best:null}:await look(fens[i],d));
     }
     const{cls,loss}=classify(mv,fens,pos);
-    S={moves:mv,fens,pos,cls,loss,k:0,flip:false,ex:{},names:[h.White||'أبيض',h.Black||'أسود']};
-    summary();$('#ml').innerHTML=mv.map((m,i)=>(i%2?'':`<span class="n">${i/2+1}.</span>`)+`<button data-k="${i+1}" style="--c:${CL[cls[i]][1]}">${m.san}</button>`).join('');
-    $('#rv').hidden=false;st.textContent='اكتمل التحليل.';show(0);
+    S={moves:mv,fens,pos,cls,loss,k:0,flip:false,ex:{},hn:[h.White,h.Black]};
+    $('#ml').innerHTML=mv.map((m,i)=>(i%2?'':`<span class="n">${i/2+1}.</span>`)+`<button data-k="${i+1}" style="--c:${CL[cls[i]][1]}">${m.san}</button>`).join('');
+    $('#rv').hidden=false;summary();show(0);st.textContent=t('done');
     $('#rv').scrollIntoView({behavior:'smooth'});
-  }catch(e){st.textContent='حدث خطأ أثناء التحليل. جرّب مرة ثانية.'}
+  }catch(e){st.textContent=t('err')}
   $('#go').disabled=false;
 };
 
+const nm=i=>S.hn[i]||t(i?'black':'white');
 const whiteCp=k=>(S.fens[k].split(' ')[1]==='w'?1:-1)*S.pos[k].cp;
 function bestSan(k){
   const b=S.pos[k].best;if(!b)return'';
-  const c=new Chess(S.fens[k]),m=c.move({from:b.slice(0,2),to:b.slice(2,4),promotion:b[4]});
+  const m=new Chess(S.fens[k]).move({from:b.slice(0,2),to:b.slice(2,4),promotion:b[4]});
   return m?m.san:b;
 }
 function summary(){
   const acc=c=>{const a=S.moves.map((m,i)=>m.color===c?Math.min(100,Math.max(0,103.1668*Math.exp(-0.04354*S.loss[i])-3.1669)):null).filter(x=>x!==null);return a.length?Math.round(a.reduce((x,y)=>x+y)/a.length):'–'};
-  const n=(c,t)=>S.moves.filter((m,i)=>m.color===c&&S.cls[i]===t).length;
-  $('#sum').innerHTML=`<table><tr><th></th><th>${S.names[0]}</th><th>${S.names[1]}</th></tr><tr><td>الدقة</td><td>${acc('w')}%</td><td>${acc('b')}%</td></tr>`+
-    Object.keys(CL).map(t=>`<tr><td><span class="dot" style="background:${CL[t][1]}"></span>${CL[t][2]}</td><td>${n('w',t)}</td><td>${n('b',t)}</td></tr>`).join('')+'</table>';
-  const N=S.moves.length,pts=S.pos.map((_,i)=>`${i/N*600},${80-win(whiteCp(i))*.8}`);
-  S.gp=pts;
+  const n=(c,k)=>S.moves.filter((m,i)=>m.color===c&&S.cls[i]===k).length;
+  $('#sum').innerHTML=`<table><tr><th></th><th>${nm(0)}</th><th>${nm(1)}</th></tr><tr><td>${t('acc')}</td><td>${acc('w')}%</td><td>${acc('b')}%</td></tr>`+
+    Object.keys(CL).map(k=>`<tr><td><span class="dot" style="background:${CL[k][1]}"></span>${t('c_'+k)}</td><td>${n('w',k)}</td><td>${n('b',k)}</td></tr>`).join('')+'</table>';
+  const N=S.moves.length;
+  S.gp=S.pos.map((_,i)=>`${i/N*600},${80-win(whiteCp(i))*.8}`);
 }
 function graph(){
-  const N=S.moves.length,x=S.k/N*600;
-  $('#gr').innerHTML=`<polygon points="0,80 ${S.gp.join(' ')} 600,80" fill="#8a8f8c" opacity=".55"/><polyline points="${S.gp.join(' ')}" fill="none" stroke="#2f5d50" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="${x}" x2="${x}" y1="0" y2="80" stroke="#c83431" stroke-width="2" vector-effect="non-scaling-stroke"/>`;
+  const x=S.k/S.moves.length*600;
+  $('#gr').innerHTML=`<polygon points="0,80 ${S.gp.join(' ')} 600,80" fill="#8c8a86" opacity=".6"/><polyline points="${S.gp.join(' ')}" fill="none" stroke="#81b64c" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="${x}" x2="${x}" y1="0" y2="80" stroke="#ca3431" stroke-width="2" vector-effect="non-scaling-stroke"/>`;
 }
 function show(k){
   S.k=Math.max(0,Math.min(S.moves.length,k));k=S.k;
@@ -185,22 +203,22 @@ function show(k){
     h+=`<div class="sq ${(rr+ff)%2?'d':'l'}${hl?' hl':''}">`+(p!=='.'?`<i class="${p===p.toUpperCase()?'w':'b'}">${GL[p.toLowerCase()]}</i>`:'')+(lm&&sq===lm.to?`<b class="bdg" style="background:${CL[c][1]}">${CL[c][0]}</b>`:'')+'</div>';
   }
   $('#cells').innerHTML=h;
-  let a='',info='البداية';
+  let a='',info=t('start');
   const w=whiteCp(k);
   $('#evw').style.height=win(w)+'%';
   $('#ev').style.flexDirection=S.flip?'column':'column-reverse';
   if(k){
-    const m=S.moves[k-1],b=S.pos[k-1].best,bs=bestSan(k-1);
-    info=`${Math.ceil(k/2)}${k%2?'.':'...'} ${m.san} — ${CL[c][2]} <small>التقييم ${fmt(w)}`+(!['best','brilliant','great'].includes(c)&&bs?` · الأفضل: ${bs}`:'')+'</small>';
-    if(!['best','brilliant','great'].includes(c)&&b){
+    const m=S.moves[k-1],b=S.pos[k-1].best,bs=bestSan(k-1),good=['best','brilliant','great'].includes(c);
+    info=`${Math.ceil(k/2)}${k%2?'.':'...'} ${m.san} — ${t('c_'+c)} <small>${t('eval')} ${fmt(w)}`+(!good&&bs?` · ${t('bestIs')}: ${bs}`:'')+'</small>';
+    if(!good&&b){
       const P=s=>[(S.flip?7-'abcdefgh'.indexOf(s[0]):'abcdefgh'.indexOf(s[0]))+.5,(S.flip?+s[1]-1:8-s[1])+.5];
       const[x1,y1]=P(b.slice(0,2)),[x2,y2]=P(b.slice(2,4));
-      a=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#7aa33a" stroke-width=".2" stroke-linecap="round" opacity=".85"/><circle cx="${x2}" cy="${y2}" r=".25" fill="#7aa33a" opacity=".85"/>`;
+      a=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#81b64c" stroke-width=".2" stroke-linecap="round" opacity=".9"/><circle cx="${x2}" cy="${y2}" r=".25" fill="#81b64c" opacity=".9"/>`;
     }
   }
   $('#ar').innerHTML=a;$('#info').innerHTML=info;
-  $('#top').textContent=(S.flip?'⚪ ':'⚫ ')+S.names[S.flip?0:1];
-  $('#bot').textContent=(S.flip?'⚫ ':'⚪ ')+S.names[S.flip?1:0];
+  $('#top').textContent=(S.flip?'⚪ ':'⚫ ')+nm(S.flip?0:1);
+  $('#bot').textContent=(S.flip?'⚫ ':'⚪ ')+nm(S.flip?1:0);
   $('#ex').textContent=S.ex[k]||'';$('#exb').hidden=!k;
   document.querySelectorAll('#ml button').forEach(x=>x.classList.toggle('on',+x.dataset.k===k));
   const on=document.querySelector('#ml button.on');if(on)on.scrollIntoView({block:'nearest'});
@@ -212,22 +230,32 @@ $('#fl').onclick=()=>{S.flip=!S.flip;show(S.k)};
 $('#ml').onclick=e=>{const b=e.target.closest('button');if(b)show(+b.dataset.k)};
 $('#gr').onclick=e=>{const r=e.currentTarget.getBoundingClientRect();show(Math.round((e.clientX-r.left)/r.width*S.moves.length))};
 document.addEventListener('keydown',e=>{if(!S||/TEXTAREA|SELECT/.test(e.target.tagName))return;
-  if(e.key==='ArrowLeft')show(S.k+1);if(e.key==='ArrowRight')show(S.k-1);});
+  if(e.key==='ArrowRight')show(S.k+1);if(e.key==='ArrowLeft')show(S.k-1);});
 
 $('#exb').onclick=async()=>{
   const k=S.k,box=$('#ex');if(!k)return;
   if(S.ex[k]){box.textContent=S.ex[k];return}
-  box.textContent='جارٍ الشرح…';
+  box.textContent=t('explaining');
   try{
     const m=S.moves[k-1];
     const r=await fetch('/api/explain',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({
-      fen:S.fens[k-1],color:m.color==='w'?'الأبيض':'الأسود',played:m.san,cls:CL[S.cls[k-1]][2],best:bestSan(k-1),
+      lang:L,fen:S.fens[k-1],color:t(m.color==='w'?'whiteC':'blackC'),played:m.san,cls:t('c_'+S.cls[k-1]),best:bestSan(k-1),
       before:(S.pos[k-1].cp/100).toFixed(1),after:(-S.pos[k].cp/100).toFixed(1)})});
     const d=await r.json();
-    if(!r.ok)throw new Error(d.error||'تعذّر الشرح');
+    if(!r.ok)throw new Error(d.error||t('explainFail'));
     S.ex[k]=d.text;if(S.k===k)box.textContent=d.text;
-  }catch(e){if(S.k===k)box.textContent=e.message||'تعذّر الشرح'}
+  }catch(e){if(S.k===k)box.textContent=e.message||t('explainFail')}
 };
+
+function applyLang(){
+  document.documentElement.lang=L;document.documentElement.dir=L==='ar'?'rtl':'ltr';
+  document.title=t('title');
+  document.querySelectorAll('[data-i]').forEach(e=>e.textContent=t(e.dataset.i));
+  $('#pgn').placeholder=t('ph');$('#lg').textContent=L==='ar'?'English':'عربي';
+  if(S){S.ex={};summary();show(S.k)}
+}
+$('#lg').onclick=()=>{L=L==='ar'?'en':'ar';try{localStorage.setItem('lang',L)}catch(e){};applyLang()};
+applyLang();
 </script>
 </body>
 </html>

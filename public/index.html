@@ -24,7 +24,7 @@ button:disabled{opacity:.6;cursor:wait}
 button:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--gr);outline-offset:2px}
 #go,#exb{background:var(--gr);color:#fff;box-shadow:0 4px 0 var(--gd)}
 #go{padding:10px 26px;font-size:1.05rem}
-#lg{padding:5px 12px;font-size:.9rem}
+#lg,#sn{padding:5px 12px;font-size:.9rem}
 #st{color:var(--mu);margin:10px 0 0;min-height:1.6em}
 .cols{display:grid;gap:16px}
 @media(min-width:840px){.cols{grid-template-columns:minmax(0,580px) 1fr}}
@@ -70,7 +70,7 @@ td:first-child,th:first-child{text-align:start}
 </style>
 </head>
 <body>
-<header><div><b><span>♞</span><i data-i="title" style="font-style:normal"></i></b><button id="lg"></button></div></header>
+<header><div><b><span>♞</span><i data-i="title" style="font-style:normal"></i></b><span style="display:flex;gap:8px"><button id="sn" aria-label="sound">🔊</button><button id="lg"></button></span></div></header>
 <main>
 <section>
   <textarea id="pgn" aria-label="PGN"></textarea>
@@ -202,7 +202,7 @@ function graph(){
   const x=S.k/S.moves.length*600;
   $('#gr').innerHTML=`<polygon points="0,80 ${S.gp.join(' ')} 600,80" fill="#8c8a86" opacity=".6"/><polyline points="${S.gp.join(' ')}" fill="none" stroke="#81b64c" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="${x}" x2="${x}" y1="0" y2="80" stroke="#ca3431" stroke-width="2" vector-effect="non-scaling-stroke"/>`;
 }
-function show(k){
+function show(k,snd){
   S.k=Math.max(0,Math.min(S.moves.length,k));k=S.k;
   const rows=S.fens[k].split(' ')[0].split('/').map(r=>r.replace(/\d/g,x=>'.'.repeat(+x)));
   const lm=k?S.moves[k-1]:null,c=k?S.cls[k-1]:null;
@@ -233,14 +233,15 @@ function show(k){
   document.querySelectorAll('#ml button').forEach(x=>x.classList.toggle('on',+x.dataset.k===k));
   const on=document.querySelector('#ml button.on');if(on)on.scrollIntoView({block:'nearest'});
   graph();
+  if(snd&&k)sfx(S.moves[k-1]);
 }
-$('#b0').onclick=()=>show(0);$('#b1').onclick=()=>show(S.k-1);
-$('#b2').onclick=()=>show(S.k+1);$('#b3').onclick=()=>show(1e9);
+$('#b0').onclick=()=>show(0);$('#b1').onclick=()=>show(S.k-1,1);
+$('#b2').onclick=()=>show(S.k+1,1);$('#b3').onclick=()=>show(1e9,1);
 $('#fl').onclick=()=>{S.flip=!S.flip;show(S.k)};
-$('#ml').onclick=e=>{const b=e.target.closest('button');if(b)show(+b.dataset.k)};
-$('#gr').onclick=e=>{const r=e.currentTarget.getBoundingClientRect();show(Math.round((e.clientX-r.left)/r.width*S.moves.length))};
+$('#ml').onclick=e=>{const b=e.target.closest('button');if(b)show(+b.dataset.k,1)};
+$('#gr').onclick=e=>{const r=e.currentTarget.getBoundingClientRect();show(Math.round((e.clientX-r.left)/r.width*S.moves.length),1)};
 document.addEventListener('keydown',e=>{if(!S||/TEXTAREA|SELECT/.test(e.target.tagName))return;
-  if(e.key==='ArrowRight')show(S.k+1);if(e.key==='ArrowLeft')show(S.k-1);});
+  if(e.key==='ArrowRight')show(S.k+1,1);if(e.key==='ArrowLeft')show(S.k-1,1);});
 
 $('#exb').onclick=async()=>{
   const k=S.k,box=$('#ex');if(!k)return;
@@ -256,6 +257,20 @@ $('#exb').onclick=async()=>{
     S.ex[k]=d.text;if(S.k===k)box.textContent=d.text;
   }catch(e){if(S.k===k)box.textContent=e.message||t('explainFail')}
 };
+
+let AC=null,mute=false;try{mute=localStorage.getItem('mute')==='1'}catch(e){}
+function ac(){if(!AC){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;AC=new C()}if(AC.state==='suspended')AC.resume();return AC}
+function tone(f,d,v,at=0){const a=ac(),t0=a.currentTime+at,o=a.createOscillator(),g=a.createGain();o.frequency.setValueAtTime(f,t0);g.gain.setValueAtTime(v,t0);g.gain.exponentialRampToValueAtTime(.001,t0+d);o.connect(g);g.connect(a.destination);o.start(t0);o.stop(t0+d)}
+function thud(d,f,v,at=0){const a=ac(),t0=a.currentTime+at,n=Math.floor(a.sampleRate*d),b=a.createBuffer(1,n,a.sampleRate),x=b.getChannelData(0);for(let i=0;i<n;i++)x[i]=(Math.random()*2-1)*Math.pow(1-i/n,3);const s=a.createBufferSource(),fl=a.createBiquadFilter(),g=a.createGain();s.buffer=b;fl.type='lowpass';fl.frequency.value=f;g.gain.value=v;s.connect(fl);fl.connect(g);g.connect(a.destination);s.start(t0)}
+function sfx(m){
+  if(mute||!m||!ac())return;
+  if(/^O-O/.test(m.san)){thud(.05,900,.9);thud(.05,900,.9,.12);tone(160,.1,.3)}
+  else if(m.captured){thud(.09,1800,1.2);tone(110,.12,.5)}
+  else{thud(.06,1000,.8);tone(200,.08,.3)}
+  if(/#/.test(m.san)){tone(520,.25,.2,.12);tone(390,.35,.2,.3)}else if(/\+/.test(m.san))tone(880,.12,.15,.1);
+}
+$('#sn').textContent=mute?'🔇':'🔊';
+$('#sn').onclick=()=>{mute=!mute;try{localStorage.setItem('mute',mute?'1':'0')}catch(e){};$('#sn').textContent=mute?'🔇':'🔊';if(!mute&&ac())thud(.06,1000,.8)};
 
 function applyLang(){
   document.documentElement.lang=L;document.documentElement.dir=L==='ar'?'rtl':'ltr';

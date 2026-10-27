@@ -24,7 +24,11 @@ button:disabled{opacity:.6;cursor:wait}
 button:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--gr);outline-offset:2px}
 #go,#exb{background:var(--gr);color:#fff;box-shadow:0 4px 0 var(--gd)}
 #go{padding:10px 26px;font-size:1.05rem}
-#lg,#sn{padding:5px 12px;font-size:.9rem}
+#lg,#sn,#vd{padding:5px 12px;font-size:.9rem}
+#vd.off{opacity:.4}
+#vb{position:absolute;top:8px;right:8px;width:44%;z-index:6;border-radius:8px;overflow:hidden;background:#000;box-shadow:0 4px 14px rgba(0,0,0,.55)}
+#vb video{display:block;width:100%}
+#vb button{position:absolute;top:4px;left:4px;padding:0 8px;line-height:24px;font-size:.8rem;background:rgba(0,0,0,.6);box-shadow:none}
 #st{color:var(--mu);margin:10px 0 0;min-height:1.6em}
 .cols{display:grid;gap:16px}
 @media(min-width:840px){.cols{grid-template-columns:minmax(0,580px) 1fr}}
@@ -70,12 +74,12 @@ td:first-child,th:first-child{text-align:start}
 </style>
 </head>
 <body>
-<header><div><b><span>♞</span><i data-i="title" style="font-style:normal"></i></b><span style="display:flex;gap:8px"><button id="sn" aria-label="sound">🔊</button><button id="lg"></button></span></div></header>
+<header><div><b><span>♞</span><i data-i="title" style="font-style:normal"></i></b><span style="display:flex;gap:8px"><button id="vd" aria-label="videos">🎬</button><button id="sn" aria-label="sound">🔊</button><button id="lg"></button></span></div></header>
 <main>
 <section>
   <textarea id="pgn" aria-label="PGN"></textarea>
   <div class="row">
-    <label><span data-i="depth"></span> <select id="depth"><option>10</option><option selected>12</option><option>14</option><option>18</option></select></label>
+    <label><span data-i="depth"></span> <select id="depth"><option>12</option><option>14</option><option selected>16</option><option>18</option><option>20</option></select></label>
     <button id="go" data-i="go"></button>
   </div>
   <p id="st"></p>
@@ -86,11 +90,11 @@ td:first-child,th:first-child{text-align:start}
       <div class="who" id="top"></div>
       <div class="bx">
         <div id="ev"><div id="evw"></div></div>
-        <div id="bd"><div id="cells"></div><svg id="ar" viewBox="0 0 8 8"></svg></div>
+        <div id="bd"><div id="cells"></div><div id="vb" hidden><video id="cv" playsinline preload="auto"></video><button id="vx" aria-label="close">✕</button></div><svg id="ar" viewBox="0 0 8 8"></svg></div>
       </div>
       <div class="who" id="bot"></div>
       <div class="nav">
-        <button id="b0">⏮</button><button id="b1">◀</button><button id="b2">▶</button><button id="b3">⏭</button><button id="fl">⇅</button>
+        <button id="b0">⏮</button><button id="b1">◀</button><button id="b2">▶</button><button id="b3">⏭</button><button id="fl">⇅</button><button id="ap" aria-label="auto play">⏵</button>
       </div>
     </div>
     <div>
@@ -110,11 +114,11 @@ td:first-child,th:first-child{text-align:start}
 const $=s=>document.querySelector(s);
 const T={
 ar:{title:'ريڤيو الشطرنج',ph:'الصق الـPGN هنا',depth:'العمق',go:'حلّل',explain:'اشرح هذه النقلة',explaining:'جارٍ الشرح…',explainFail:'تعذّر الشرح',
- loadEng:'جارٍ تحميل المحرك…',analyzing:'جارٍ التحليل',invalid:'الـPGN غير صالح.',nomoves:'ما في نقلات في هذا الـPGN.',done:'اكتمل التحليل.',err:'حدث خطأ أثناء التحليل. جرّب مرة ثانية.',
+ loadEng:'جارٍ تحميل المحرك…',analyzing:'جارٍ التحليل',invalid:'الـPGN غير صالح.',nomoves:'ما في نقلات في هذا الـPGN.',done:'اكتمل التحليل.',oldEng:'(استُخدم المحرك الاحتياطي الأضعف، تحقق من إعداد المحرك.)',err:'حدث خطأ أثناء التحليل. جرّب مرة ثانية.',
  start:'البداية',eval:'التقييم',bestIs:'الأفضل',acc:'الدقة',white:'أبيض',black:'أسود',whiteC:'الأبيض',blackC:'الأسود',
- c_brilliant:'رائعة',c_great:'قوية',c_best:'الأفضل',c_excellent:'ممتازة',c_good:'جيدة',c_inacc:'دقة ضعيفة',c_mistake:'خطأ',c_blunder:'خطأ فادح'},
+ c_brilliant:'عجيييب',c_great:'حركة ممتازة',c_best:'الأفضل',c_excellent:'ممتازة',c_good:'جيدة',c_inacc:'دقة ضعيفة',c_mistake:'غلط',c_blunder:'تصرف ساي'},
 en:{title:'Chess Review',ph:'Paste PGN here',depth:'Depth',go:'Analyze',explain:'Explain this move',explaining:'Explaining…',explainFail:'Could not explain',
- loadEng:'Loading engine…',analyzing:'Analyzing',invalid:'Invalid PGN.',nomoves:'No moves found in this PGN.',done:'Analysis complete.',err:'Something went wrong during analysis. Try again.',
+ loadEng:'Loading engine…',analyzing:'Analyzing',invalid:'Invalid PGN.',nomoves:'No moves found in this PGN.',done:'Analysis complete.',oldEng:'(Fallback engine used, which is weaker. Check the engine setup.)',err:'Something went wrong during analysis. Try again.',
  start:'Start',eval:'Eval',bestIs:'Best',acc:'Accuracy',white:'White',black:'Black',whiteC:'White',blackC:'Black',
  c_brilliant:'Brilliant',c_great:'Great',c_best:'Best',c_excellent:'Excellent',c_good:'Good',c_inacc:'Inaccuracy',c_mistake:'Mistake',c_blunder:'Blunder'}};
 let L='ar';try{L=localStorage.getItem('lang')||((navigator.language||'').startsWith('ar')?'ar':'en')}catch(e){}
@@ -126,11 +130,26 @@ const uci=m=>m.from+m.to+(m.promotion||'');
 const fmt=cp=>Math.abs(cp)>=9000?(cp>0?'+':'-')+'M'+(10000-Math.abs(cp)):(cp>0?'+':'')+(cp/100).toFixed(1);
 let S=null,sf=null;
 
+let oldEng=false;
 async function engine(){
   if(sf)return;
-  const x=await(await fetch('https://cdnjs.cloudflare.com/ajax/libs/stockfish.js/10.0.2/stockfish.js')).text();
-  sf=new Worker(URL.createObjectURL(new Blob([x],{type:'text/javascript'})));
-  sf.postMessage('uci');sf.postMessage('setoption name MultiPV value 2');
+  try{
+    const w=new Worker('/engine/stockfish-19-lite-single.js');
+    await new Promise((ok,no)=>{
+      const to=setTimeout(()=>no(new Error('timeout')),20000);
+      w.onmessage=e=>{if(String(e.data).includes('uciok')){clearTimeout(to);ok()}};
+      w.onerror=er=>{clearTimeout(to);no(er)};
+      w.postMessage('uci');
+    });
+    w.onerror=null;sf=w;
+  }catch(e){
+    oldEng=true;
+    const x=await(await fetch('https://cdnjs.cloudflare.com/ajax/libs/stockfish.js/10.0.2/stockfish.js')).text();
+    sf=new Worker(URL.createObjectURL(new Blob([x],{type:'text/javascript'})));
+    sf.postMessage('uci');
+  }
+  sf.postMessage('setoption name MultiPV value 2');
+  if(!oldEng)sf.postMessage('setoption name Hash value 32');
 }
 const sc=m=>m[1]==='mate'?(+m[2]>0?10000-+m[2]:-10000-+m[2]):+m[2];
 function look(fen,d){return new Promise(res=>{
@@ -148,12 +167,12 @@ function classify(mv,fens,pos){
   const cls=[],loss=[];
   mv.forEach((m,k)=>{
     const wb=win(pos[k].cp),wa=win(-pos[k+1].cp),l=Math.max(0,wb-wa);
-    let c=uci(m)===pos[k].best?'best':l<2?'excellent':l<5?'good':l<10?'inacc':l<20?'mistake':'blunder';
+    let c=(uci(m)===pos[k].best||l<.5)?'best':l<2?'excellent':l<5?'good':l<10?'inacc':l<20?'mistake':'blunder';
     if((c==='best'||c==='excellent')&&l<2&&VAL[m.piece]>=3&&VAL[m.piece]<99&&wb<85&&wa>=45){
       const att=new Chess(fens[k+1]).moves({verbose:true}).filter(x=>x.to===m.to&&x.captured).map(x=>VAL[x.piece]);
       if(att.length&&Math.min(...att)<VAL[m.piece])c='brilliant';
     }
-    if(c==='best'&&pos[k].cp2!==undefined&&win(pos[k].cp)-win(pos[k].cp2)>=20&&wb>20&&wb<85)c='great';
+    if(c==='best'&&uci(m)===pos[k].best&&pos[k].cp2!==undefined&&win(pos[k].cp)-win(pos[k].cp2)>=20&&wb>20&&wb<85)c='great';
     cls.push(c);loss.push(l);
   });
   return{cls,loss};
@@ -166,7 +185,7 @@ $('#go').onclick=async()=>{
   if(!mv.length){st.textContent=t('nomoves');return}
   $('#go').disabled=true;
   try{
-    st.textContent=t('loadEng');await engine();
+    st.textContent=t('loadEng');await engine();sf.postMessage('ucinewgame');
     const h=g.header(),r=new Chess(),fens=[r.fen()];
     for(const m of mv){r.move({from:m.from,to:m.to,promotion:m.promotion});fens.push(r.fen());}
     const d=+$('#depth').value,pos=[];
@@ -177,7 +196,7 @@ $('#go').onclick=async()=>{
     const{cls,loss}=classify(mv,fens,pos);
     S={moves:mv,fens,pos,cls,loss,k:0,flip:false,ex:{},hn:[h.White,h.Black]};
     $('#ml').innerHTML=mv.map((m,i)=>(i%2?'':`<span class="n">${i/2+1}.</span>`)+`<button data-k="${i+1}" style="--c:${CL[cls[i]][1]}">${m.san}</button>`).join('');
-    $('#rv').hidden=false;summary();show(0);st.textContent=t('done');
+    $('#rv').hidden=false;summary();show(0);st.textContent=t('done')+(oldEng?' '+t('oldEng'):'');
     $('#rv').scrollIntoView({behavior:'smooth'});
   }catch(e){st.textContent=t('err')}
   $('#go').disabled=false;
@@ -202,7 +221,8 @@ function graph(){
   const x=S.k/S.moves.length*600;
   $('#gr').innerHTML=`<polygon points="0,80 ${S.gp.join(' ')} 600,80" fill="#8c8a86" opacity=".6"/><polyline points="${S.gp.join(' ')}" fill="none" stroke="#81b64c" stroke-width="1.5" vector-effect="non-scaling-stroke"/><line x1="${x}" x2="${x}" y1="0" y2="80" stroke="#ca3431" stroke-width="2" vector-effect="non-scaling-stroke"/>`;
 }
-function show(k,snd){
+function show(k,snd,fa){
+  const prev=S.k;if(curEnd)curEnd();if(snd&&!fa)stopAuto();
   S.k=Math.max(0,Math.min(S.moves.length,k));k=S.k;
   const rows=S.fens[k].split(' ')[0].split('/').map(r=>r.replace(/\d/g,x=>'.'.repeat(+x)));
   const lm=k?S.moves[k-1]:null,c=k?S.cls[k-1]:null;
@@ -233,7 +253,8 @@ function show(k,snd){
   document.querySelectorAll('#ml button').forEach(x=>x.classList.toggle('on',+x.dataset.k===k));
   const on=document.querySelector('#ml button.on');if(on)on.scrollIntoView({block:'nearest'});
   graph();
-  if(snd&&k)sfx(S.moves[k-1]);
+  clipP=null;
+  if(snd&&k){sfx(S.moves[k-1]);if(k===prev+1)clipP=playClip(S.cls[k-1])}
 }
 $('#b0').onclick=()=>show(0);$('#b1').onclick=()=>show(S.k-1,1);
 $('#b2').onclick=()=>show(S.k+1,1);$('#b3').onclick=()=>show(1e9,1);
@@ -250,7 +271,7 @@ $('#exb').onclick=async()=>{
   try{
     const m=S.moves[k-1];
     const r=await fetch('/api/explain',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({
-      lang:L,fen:S.fens[k-1],color:t(m.color==='w'?'whiteC':'blackC'),played:m.san,cls:t('c_'+S.cls[k-1]),best:bestSan(k-1),
+      lang:L,fen:S.fens[k-1],color:t(m.color==='w'?'whiteC':'blackC'),played:m.san,cls:t('c_'+S.cls[k-1])+' ('+S.cls[k-1]+')',best:bestSan(k-1),
       before:(S.pos[k-1].cp/100).toFixed(1),after:(-S.pos[k].cp/100).toFixed(1)})});
     const d=await r.json();
     if(!r.ok)throw new Error(d.error||t('explainFail'));
@@ -270,7 +291,42 @@ function sfx(m){
   if(/#/.test(m.san)){tone(520,.25,.2,.12);tone(390,.35,.2,.3)}else if(/\+/.test(m.san))tone(880,.12,.15,.1);
 }
 $('#sn').textContent=mute?'🔇':'🔊';
-$('#sn').onclick=()=>{mute=!mute;try{localStorage.setItem('mute',mute?'1':'0')}catch(e){};$('#sn').textContent=mute?'🔇':'🔊';if(!mute&&ac())thud(.06,1000,.8)};
+$('#sn').onclick=()=>{mute=!mute;$('#cv').muted=mute;try{localStorage.setItem('mute',mute?'1':'0')}catch(e){};$('#sn').textContent=mute?'🔇':'🔊';if(!mute&&ac())thud(.06,1000,.8)};
+
+// Reaction videos: put the files in the site's root folder (public/) and list their names here.
+const VIDEOS={brilliant:['brilliant1.mp4'],great:['great1.mp4'],mistake:['mistake1.mp4'],blunder:['blunder1.mp4']};
+let vidOn=true,auto=false,clipP=null,curEnd=null;
+try{vidOn=localStorage.getItem('vid')!=='0'}catch(e){}
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function playClip(c){
+  const list=VIDEOS[c];
+  if(!vidOn||!list||!list.length)return null;
+  const v=$('#cv'),box=$('#vb');
+  return new Promise(res=>{
+    let done=false;
+    const end=()=>{if(done)return;done=true;clearTimeout(to);box.hidden=true;v.pause();v.onended=v.onerror=v.onplaying=null;curEnd=null;res()};
+    const to=setTimeout(end,9000);
+    curEnd=end;
+    v.onended=end;v.onerror=end;v.onplaying=()=>{box.hidden=false};
+    $('#vx').onclick=end;
+    v.src=list[Math.floor(Math.random()*list.length)];
+    v.muted=mute;
+    v.play().catch(()=>{v.muted=true;v.play().catch(end)});
+  });
+}
+function stopAuto(){auto=false;$('#ap').textContent='⏵'}
+async function autoRun(){
+  auto=true;$('#ap').textContent='⏸';
+  while(auto&&S.k<S.moves.length){
+    show(S.k+1,1,true);
+    await(clipP||sleep(1100));
+    if(clipP)await sleep(400);
+  }
+  stopAuto();
+}
+$('#ap').onclick=()=>{if(!S)return;if(auto){stopAuto();return}if(S.k>=S.moves.length)show(0);autoRun()};
+$('#vd').classList.toggle('off',!vidOn);
+$('#vd').onclick=()=>{vidOn=!vidOn;try{localStorage.setItem('vid',vidOn?'1':'0')}catch(e){};$('#vd').classList.toggle('off',!vidOn);if(!vidOn&&curEnd)curEnd()};
 
 function applyLang(){
   document.documentElement.lang=L;document.documentElement.dir=L==='ar'?'rtl':'ltr';
